@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="lv">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enerģijas Kalkulators</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="stils.css">
+</head>
+
+
+<body>
+    <header>
+        <h1>Enerģijas Kalkulators</h1>
+    </header>
+
+    <main>
+        <div class="unit-toggle">
+            <button class="unit-btn active" data-units="metriskais">Metriskais (kg/cm)</button>
+            <button class="unit-btn" data-units="imperialais">Imperialais (lbs/in)</button>
+        </div>
+
+        <div class="input-section">
+            <div class="input-group">
+                <label>Dzimums:</label>
+                <select id="dzimums">
+                    <option value="virs">Vīrietis</option>
+                    <option value="siev">Sieviete</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Vecums (gadi):</label>
+                <input type="number" id="vecums" min="1" max="120" value="25">
+            </div>
+
+            <div class="input-group">
+                <label id="svarEtiķete">Svars (kg):</label>
+                <input type="number" id="svars" min="1" step="0.1" value="70">
+            </div>
+
+            <div class="input-group">
+                <label id="augumEtiķete">Augums (cm):</label>
+                <input type="number" id="augums" min="1" step="0.1" value="175">
+            </div>
+
+            <div class="input-group">
+                <label>Aktivitātes līmenis:</label>
+                <select id="aktivitate">
+                    <option value="1.2">Mazkustīgs</option>
+                    <option value="1.375">Viegli aktīvs</option>
+                    <option value="1.55" selected>Vidēji aktīvs</option>
+                    <option value="1.725">Ļoti aktīvs</option>
+                    <option value="1.9">Ļoti ļoti aktīvs</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Mērķis:</label>
+                <select id="merkis">
+                    <option value="uzturetSvaru">Uzturēt svaru</option>
+                    <option value="zaudetSvaru">Zaudēt svaru</option>
+                    <option value="paaugstinaSvaru">Paaugstināt svaru</option>
+                </select>
+            </div>
+
+            <button class="calc-btn" id="aprekeinu">Aprēķināt</button>
+        </div>
+
+        <div id="rezultati" class="hidden">
+            <div class="results-grid">
+                <div class="result-item">
+                    <h3>BMR</h3>
+                    <div class="value" id="bmrVert">0</div>
+                    <div class="unit">kcal</div>
+                </div>
+
+                <div class="result-item">
+                    <h3>TDEE</h3>
+                    <div class="value" id="tdeeVert">0</div>
+                    <div class="unit">kcal</div>
+                </div>
+
+                <div class="result-item">
+                    <h3>Dienas Mērķis</h3>
+                    <div class="value" id="merkisVert">0</div>
+                    <div class="unit">kcal</div>
+                </div>
+            </div>
+
+            
+            <div class="chart-container">
+                <canvas id="makroGrafiks"></canvas>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Makronutrienti</th>
+                        <th>Grams</th>
+                        <th>Kalorijas</th>
+                        <th>% no TDEE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Olbaltumvielas</td>
+                        <td id="olbG">0</td>
+                        <td id="olbKcal">0</td>
+                        <td id="olbProc">0%</td>
+                    </tr>
+                    <tr>
+                        <td>Tauki</td>
+                        <td id="takuG">0</td>
+                        <td id="takuKcal">0</td>
+                        <td id="takuProc">0%</td>
+                    </tr>
+                    <tr>
+                        <td>Ogļhidrāti</td>
+                        <td id="oglG">0</td>
+                        <td id="oglKcal">0</td>
+                        <td id="oglProc">0%</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ēdienreize</th>
+                        <th>Kalorijas</th>
+                        <th>Olbaltumvielas</th>
+                        <th>Tauki</th>
+                        <th>Ogļhidrāti</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Brokastis</td>
+                        <td id="brokalKcal">0</td>
+                        <td id="brokalOlb">0g</td>
+                        <td id="brokalTak">0g</td>
+                        <td id="brokalOgl">0g</td>
+                    </tr>
+                    <tr>
+                        <td>Pusdienas</td>
+                        <td id="pusKcal">0</td>
+                        <td id="pusOlb">0g</td>
+                        <td id="pusTak">0g</td>
+                        <td id="pusOgl">0g</td>
+                    </tr>
+                    <tr>
+                        <td>Vakariņas</td>
+                        <td id="vakKcal">0</td>
+                        <td id="vakOlb">0g</td>
+                        <td id="vakTak">0g</td>
+                        <td id="vakOgl">0g</td>
+                    </tr>
+                    <tr>
+                        <td>Uzkodas</td>
+                        <td id="uzkKcal">0</td>
+                        <td id="uzkOlb">0g</td>
+                        <td id="uzkTak">0g</td>
+                        <td id="uzkOgl">0g</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
